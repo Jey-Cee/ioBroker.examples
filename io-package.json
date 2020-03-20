@@ -1,0 +1,79 @@
+{
+	"common": {
+		"name": "examples",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "Examples",
+		"titleLang": {
+			"en": "Examples",
+			"de": "Beispiele",
+			"ru": "Примеры",
+			"pt": "Exemplos",
+			"nl": "Voorbeelden",
+			"fr": "Exemples",
+			"it": "Esempi",
+			"es": "Ejemplos",
+			"pl": "Przykłady",
+			"zh-cn": "例子"
+		},
+		"desc": {
+			"en": "This is a showcase for configuration and function code snippets.",
+			"de": "Dies ist ein Schaufenster für Konfigurations- und Funktionscode-Snippets.",
+			"ru": "Это витрина для конфигурации и фрагментов кода функции.",
+			"pt": "Esta é uma vitrine para trechos de código de configuração e função.",
+			"nl": "Dit is een showcase voor configuratie- en functiecodefragmenten.",
+			"fr": "Il s'agit d'une vitrine pour les extraits de code de configuration et de fonction.",
+			"it": "Questa è una vetrina per frammenti di codice di configurazione e funzione.",
+			"es": "Este es un escaparate para los fragmentos de código de configuración y función.",
+			"pl": "Jest to wizytówka fragmentów kodu konfiguracji i funkcji.",
+			"zh-cn": "这是有关配置和功能代码段的展示。"
+		},
+		"authors": [
+			"Jey Cee <jey-cee@live.com>"
+		],
+		"keywords": [
+			"iobroker",
+			"adapter",
+			"template",
+			"example"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "examples.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/Jey-Cee/ioBroker.examples/master/admin/examples.png",
+		"readme": "https://github.com/Jey-Cee/ioBroker.examples/blob/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "general",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"materialize": true,
+		"dependencies": [
+			{
+				"js-controller": ">=1.4.2"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
