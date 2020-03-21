@@ -18,33 +18,45 @@
     <script type="text/javascript" src="words.js"></script>
 
     <script type="text/javascript">
-		// This will be called by the admin adapter when the settings page loads
+
+		/**
+         * This will be called by the admin adapter when the settings page loads
+		 * @param {object} settings - represents the adapter config object
+		 * @param {object} onChange - callback
+		 */
 		function load(settings, onChange) {
-			// example: select elements with id=key and class=value and insert value
-			if (!settings) return;
+            if (!settings) return;
+
+            //  example: select elements with id=key and class=value
 			$('.value').each(function () {
 				var $key = $(this);
 				var id = $key.attr('id');
+				// check which type of html element
 				if ($key.attr('type') === 'checkbox') {
-					// do not call onChange direct, because onChange could expect some arguments
-					$key.prop('checked', settings[id])
-						.on('change', () => onChange())
+					$key.prop('checked', settings[id])  // read setting value from adapter config object and set checkbox in config page
+						.on('change', () => onChange()) // set listener to checkbox and call onChange if the value has changed
 					;
 				} else {
-					// do not call onChange direct, because onChange could expect some arguments
 					$key.val(settings[id])
 						.on('change', () => onChange())
 						.on('keyup', () => onChange())
 					;
 				}
 			});
+
 			onChange(false);
+
 			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
 			if (M) M.updateTextFields();
 		}
 
-		// This will be called by the admin adapter when the user presses the save button
+
+		/**
+         * This will be called by the admin adapter when the user presses the Save or Save and Close button
+		 * @param {object} callback - JSON object which holds keys and their values that will be written to adapter config object
+		 */
 		function save(callback) {
+
 			// example: select elements with class=value and build settings object
 			var obj = {};
 			$('.value').each(function () {
@@ -64,60 +76,100 @@
 <body>
 
 <div class="m adapter-container">
+    <div class="row">
 
     <!-- Tabs: Menu -->
-    <div class="row">
         <div class="col s12">
             <ul class="tabs">
                 <!-- Single tab entry - link to div with id "introduction" -->
-                <li class="tab col s3"><a href="#introduction">Intro</a></li>
+                <li class="tab col s3"><a href="#tab-introduction">Intro</a></li>
                 <!-- Single tab entry -->
 
-                <li class="tab col s3"><a href="#elements">Elements</a></li>
-				<li class="tab col s3"><a href="#tables">Tables</a></li>
+                <li class="tab col s3"><a href="#tab-elements">Elements</a></li>
+				<li class="tab col s3"><a href="#tab-tables">Tables</a></li>
 
             </ul>
         </div>
-    </div>
     <!-- Tabs: Menu -->
 
 
-    <!-- Tab with id "elments" -->
-    <div id="elements" class="col s12">
+    <!-- Tab with id "tab-elments" -->
+    <div id="tab-elements" class="col s12 page">
         <!-- For example columns with settings: -->
         <div class="row">
             <div class="col s6 input-field">
-                <input type="checkbox" class="value" id="option1"/>
-                <label for="option1" class="translate">option1</label>
+                <input type="checkbox" class="value" id="cb-option-1"/>
+                <label for="cb-option-1" class="translate">Sets / represents true or false for cb-option-1 in adapter config</label>
             </div>
 
             <div class="col s6 input-field">
-                <input type="text" class="value" id="option2"/>
-                <label for="option2" class="translate">option2</label>
+                <input type="text" class="value" id="txt-option-2"/>
+                <label for="txt-option-2" class="translate">Sets / represents the entered text for txt-option-2 in adapter config</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <h5>Read only Elements</h5>
+        </div>
+        <div class="row">
+            <div class="col s1">
+                <div class="led-all led-gray"></div>
             </div>
         </div>
     </div>
-    <!-- Tab with id "elments" -->
+    <!-- Tab with id "tab-elments" -->
 
 
-    <!-- Tab with id "introduction" -->
-    <div id="introduction" class="col s12">
+    <!-- Tab with id "tab-introduction" -->
+    <div id="tab-introduction" class="col s12">
         <div class="row">
             <div class="col s12 m4 l2">
                 <img src="examples.png" class="logo">
             </div>
         </div>
+
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel grey lighten-2">
+                    <h6>Here you will find examples for Elements and Methods that can be used in adapter configuration.</h6>
+                    <p>For a deeper look go to source code and read the comments, they will explain technical details.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col s4">
+                <div class="card red">
+                    <div class="card-content">
+                        <span class="card-title"><b>Important:</b></span>
+                        <p><li>For visualisation the Admin (and adapter config also) uses <a class="white-text" href="https://materializecss.com/">Materializecss</a>. <br>
+                            This is a popular CSS Framework with a good documentation, so if you want to playing around with styles refer to that documentation.</li> <br>
+                        <li>For simple interaction with html elements the <a class="white-text" href="https://https://jquery.com/">jQuery</a> Framwork is used.</li></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s4">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title"><b>Multilanguage:</b></span>
+                        <p>Elements with text that should be translated needs the class "translate". The text of the element has to be 1:1 as it is in words.js file.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- Tab with id "introduction" -->
+    <!-- Tab with id "tab-introduction" -->
 
 
-	<!-- Tab with id "tables" -->
-	<div id="tables" class="col s12">
+	<!-- Tab with id "tab-tables" -->
+	<div id="tab-tables" class="col s12">
 
 	</div>
-	<!-- Tab with id "tables" -->
+	<!-- Tab with id "tab-tables" -->
 
-
+    </div>
 </div>
 
 </body>
