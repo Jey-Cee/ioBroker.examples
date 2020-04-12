@@ -19,6 +19,64 @@
 
     <script type="text/javascript">
 
+        /**
+         * Fill table with data from array
+         * @param {string} id - The id of the table as string, e.g. #table-id
+         * @param {array} data - The data for the row, in the order of the columns
+         * @param {boolean} delBtn - If true a delete button is added. This button will only delete the displayed row data, you have to add additional functions by yourself.
+         */
+        function fillTable(id, data, delBtn){
+            let tableRow;
+
+            for(let d in data){
+            	const index = d;
+            	let col = $(id + ' > table > thead > tr').children().eq(index);
+            	let write = $(col).attr('data-write');  //Look at the table head for column if it should be a input field
+				let type = $(col).attr('data-type');    //Look for the type of data, only relevant if data-write is true
+
+				switch(type) {
+					case 'number':
+						if(write === 'true'){
+							tableRow += `<td><input type="number" class="validate" value="${data[d]}"></td>`;
+                        }else{
+							tableRow += `<td>${data[d]}</td>`
+                        }
+						break;
+                    case 'text':
+						if(write === 'true'){
+							tableRow += `<td><input type="text" class="validate" value="${data[d]}"></td>`;
+						}else{
+							tableRow += `<td>${data[d]}</td>`
+						}
+                        break;
+                    case 'password':
+						if(write === 'true'){
+							tableRow += `<td><input type="password" class="validate" value="${data[d]}"></td>`;
+						}else{
+							tableRow += `<td>${data[d]}</td>`
+						}
+                    	break;
+                }
+            }
+
+            if(delBtn === true){
+            	$('.delete-table-row').unbind('click');     //unbind event listener for buttons with class delete-table-row to prevent multiple function calls
+                tableRow += `<td><a class="delete-table-row btn-floating btn-small waves-effect waves-light red"><i class="material-icons">delete</i></a></td>`;
+            }
+
+            tableRow = `<tr> ${tableRow} </tr>`;
+            $(id + ' > table > tbody').append(tableRow);
+
+			$('.delete-table-row').on('click', (event) => {
+				console.log('delete');
+				$(event.currentTarget).parentsUntil('tr').parent().remove();
+
+				//additional functions that will be called when delete button was clicked
+			})
+
+			M.updateTextFields();
+        }
+
 		/**
          * This will be called by the admin adapter when the settings page loads
 		 * @param {object} settings - represents the adapter config object
@@ -46,8 +104,19 @@
 
 			onChange(false);
 
+			//fill dynamic table
+            $('#fill-dynamic-table').on('click', () => {
+            	let data = [1, 'Text', 'privat'];
+            	let data2 = [2, 'Anderer Text', 'geheim'];
+                fillTable('#dynamic-table', data, false);
+                fillTable('#dynamic-table', data2, true);
+            })
+
 			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
 			if (M) M.updateTextFields();
+
+			//initialize dropdowns
+			$('.dropdown-trigger').dropdown();
 		}
 
 
@@ -97,6 +166,7 @@
     <div id="tab-elements" class="col s12 page">
         <!-- For example columns with settings: -->
         <div class="row">
+            <h5>Input Elements</h5>
             <div class="col s6 input-field">
                 <input type="checkbox" class="value" id="cb-option-1"/>
                 <label for="cb-option-1" class="translate">Sets / represents true or false for cb-option-1 in adapter config</label>
@@ -105,6 +175,25 @@
             <div class="col s6 input-field">
                 <input type="text" class="value" id="txt-option-2"/>
                 <label for="txt-option-2" class="translate">Sets / represents the entered text for txt-option-2 in adapter config</label>
+            </div>
+
+            <div class="input-field col s3">
+                <select id="select-option-3">
+                    <option value="" disabled selected>Choose option</option>
+                </select>
+                <label for="select-option-3" class="translate">Option</label>
+            </div>
+
+            <div class="input-field col s3">
+                <!-- Dropdown Trigger -->
+                <a class='dropdown-trigger btn' href='#' data-target='dropdown-1'>Drop Me!</a>
+                <!-- Dropdown Structure -->
+                <ul id='dropdown-1' class='dropdown-content'>
+                    <li><a href="#!">one</a></li>
+                    <li><a href="#!">two</a></li>
+                    <li class="divider" tabindex="-1"></li>
+                    <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+                </ul>
             </div>
         </div>
 
@@ -154,7 +243,7 @@
                 <div class="card">
                     <div class="card-content">
                         <span class="card-title"><b>Multilanguage:</b></span>
-                        <p>Elements with text that should be translated needs the class "translate". The text of the element has to be 1:1 as it is in words.js file.</p>
+                        <p>Elements with text that should be translated needs the class "translate". The text of the element has to be 1:1 as it is in words.js file. <br><br> <bold>NOTE:</bold> Dynamic created elements wont be translated.</p>
                     </div>
                 </div>
             </div>
@@ -165,6 +254,28 @@
 
 	<!-- Tab with id "tab-tables" -->
 	<div id="tab-tables" class="col s12">
+
+        <div class="row">
+            <div class="col">
+                <a id="fill-dynamic-table" class="waves-effect waves-light btn">Fill dynamic table</a>
+            </div>
+        <!-- dynamic table -->
+        <div id="dynamic-table">
+            <table class="centered">
+                <thead>
+                <tr>
+                    <!-- Define table head for columns. data-type and data-write is optional, for more information refer to function fillTable -->
+                    <th class="translate" data-type="number" data-write="true">Column 1</th>
+                    <th class="translate" data-type="text" data-write="false">Column 2</th>
+                    <th class="translate" data-type="password" data-write="true">Column 3</th>
+                </tr>
+                </thead>
+                <tbody id="dynamic-table-body" class="table-values">
+                </tbody>
+            </table>
+        </div>
+        <!-- dynamic table -->
+        </div>
 
 	</div>
 	<!-- Tab with id "tab-tables" -->
