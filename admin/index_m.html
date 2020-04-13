@@ -56,7 +56,26 @@
 							tableRow += `<td>${data[d]}</td>`
 						}
                     	break;
-                }
+					case 'checkbox':
+						if (write === 'true') {
+							let checked = '';
+							if(data[d] === true){
+								checked = 'checked="checked"';
+                            }
+							tableRow += `<td><label><input type="checkbox" class="validate" ${checked}><span></span></label></td>`;
+						} else {
+							tableRow += `<td>${data[d]}</td>`
+						}
+						break;
+					case 'select':
+						if (write === 'true') {
+							tableRow += `<td><div class="input-field col s12"><select class="table-select"> <option value="" disabled selected>Choose your option</option></select></div></td>`;
+						} else {
+							tableRow += `<td>${data[d]}</td>`
+						}
+						break;
+
+				}
             }
 
             if(delBtn === true){
@@ -73,9 +92,40 @@
 
 				//additional functions that will be called when delete button was clicked
 			})
+			let selectInstance = M.FormSelect.getInstance($('select'));
+			instances = M.FormSelect.init($('select'));
 
 			M.updateTextFields();
         }
+
+
+		/**
+		 * If class as identifier is, you have to reinitialise all select elements.
+		 * @param {string }selector - id or class name, id: #myID, class: .myClass
+		 * @param {array} data - as array where the data has to be sorted in which order you like to display them
+		 */
+		function fillSelect(selector, data) {
+			$(selector).unbind('change');
+
+			let selectInstance = M.FormSelect.getInstance($(selector));
+			if (selectInstance) {
+				selectInstance.destroy();
+			}
+
+			$(selector).empty();
+			$(selector).append('<option vlaue="" selected>Choose</option>');
+
+			for (let d in data) {
+				$(selector).append('<option vlaue="' + data[d] + '">' + data[d] + '</option>');
+			}
+
+			instances = M.FormSelect.init($(selector));
+
+			$(selector).on('change', (event) => {
+				_onChange();
+			})
+		}
+
 
 		/**
          * This will be called by the admin adapter when the settings page loads
@@ -106,11 +156,14 @@
 
 			//fill dynamic table
             $('#fill-dynamic-table').on('click', () => {
-            	let data = [1, 'Text', 'privat'];
-            	let data2 = [2, 'Anderer Text', 'geheim'];
+            	let data = [1, 'Text', 'privat', '', true];
+            	let data2 = [2, 'Anderer Text', 'geheim', '', false];
                 fillTable('#dynamic-table', data, false);
                 fillTable('#dynamic-table', data2, true);
             })
+
+            //Fill select on Elements Tab with options
+            fillSelect('#elements-select', [1, 2, 'Option 3']);
 
 			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
 			if (M) M.updateTextFields();
@@ -178,15 +231,15 @@
             </div>
 
             <div class="input-field col s3">
-                <select id="select-option-3">
+                <select id="elements-select">
                     <option value="" disabled selected>Choose option</option>
                 </select>
-                <label for="select-option-3" class="translate">Option</label>
+                <label for="elements-select" class="translate">Select</label>
             </div>
 
             <div class="input-field col s3">
                 <!-- Dropdown Trigger -->
-                <a class='dropdown-trigger btn' href='#' data-target='dropdown-1'>Drop Me!</a>
+                <a class='dropdown-trigger btn' href='#' data-target='dropdown-1'>Dropdown</a>
                 <!-- Dropdown Structure -->
                 <ul id='dropdown-1' class='dropdown-content'>
                     <li><a href="#!">one</a></li>
@@ -203,6 +256,12 @@
         <div class="row">
             <div class="col s1">
                 <div class="led-all led-gray"></div>
+            </div>
+            <div class="col s1">
+                <div class="led-all led-green"></div>
+            </div>
+            <div class="col s1">
+                <div class="led-all led-red"></div>
             </div>
         </div>
     </div>
@@ -268,6 +327,8 @@
                     <th class="translate" data-type="number" data-write="true">Column 1</th>
                     <th class="translate" data-type="text" data-write="false">Column 2</th>
                     <th class="translate" data-type="password" data-write="true">Column 3</th>
+                    <th class="translate" data-type="select" data-write="true" >Column 4</th>
+                    <th class="translate" data-type="checkbox" data-write="true">Column 5</th>
                 </tr>
                 </thead>
                 <tbody id="dynamic-table-body" class="table-values">
