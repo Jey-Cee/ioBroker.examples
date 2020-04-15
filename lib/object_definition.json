@@ -1,0 +1,57 @@
+{
+  "temperature": {
+    "type": "state",
+    "common": {
+      "name": "Temperature",
+      "type": "number",
+      "role": "value.temperature",
+      "unit": "°C",
+      "read": true,
+      "write": false
+    },
+    "native": {
+      "test": true
+    },
+    "value": {
+      "divider": 10
+    }
+  },
+  "setTemperature": {
+    "type": "state",
+    "common": {
+      "name": "Set Temperature",
+      "type": "number",
+      "role": "level.temperature",
+      "read": true,
+      "write": true
+    },
+    "native": {
+    }
+  },
+  "on": {
+    "type": "state",
+    "common": {
+      "name": "ON",
+      "type": "boolean",
+      "role": "switch",
+      "read": true,
+      "write": true
+    },
+    "native": {
+    },
+    "value": {
+      "number": {"0": false, "1":  true}
+    }
+  },
+  "on_out": {
+    "type": "state",
+    "common": {
+      "name": "Demo Output if you change ON",
+      "type": "number",
+      "role": "value",
+      "read": true,
+      "write": false
+    },
+    "native": {}
+  }
+}

@@ -8,6 +8,9 @@
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
 
+//Load object definitions
+const oDefs = require('./lib/object_definition.json');
+
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
@@ -39,46 +42,13 @@ class Examples extends utils.Adapter {
 		this.log.info('config option1: ' + this.config.option1);
 		this.log.info('config option2: ' + this.config.option2);
 
-		/*
-		For every state in the system there has to be also an object of type state
-		Here a simple template for a boolean variable named "testVariable"
-		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-		*/
-		await this.setObjectAsync('testVariable', {
-			type: 'state',
-			common: {
-				name: 'testVariable',
-				type: 'boolean',
-				role: 'indicator',
-				read: true,
-				write: true,
-			},
-			native: {},
-		});
 
 		// in this template all states changes inside the adapters namespace are subscribed
 		this.subscribeStates('*');
 
-		/*
-		setState examples
-		you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-		*/
-		// the variable testVariable is set to true as command (ack=false)
-		await this.setStateAsync('testVariable', true);
-
-		// same thing, but the value is flagged "ack"
-		// ack should be always set to true if the value is received from or acknowledged from the target system
-		await this.setStateAsync('testVariable', { val: true, ack: true });
-
-		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		await this.setStateAsync('testVariable', { val: true, ack: true, expire: 30 });
-
-		// examples for the checkPassword/checkGroup functions
-		let result = await this.checkPasswordAsync('admin', 'iobroker');
-		this.log.info('check user admin pw iobroker: ' + result);
-
-		result = await this.checkGroupAsync('admin', 'admin');
-		this.log.info('check group user admin group admin: ' + result);
+		//create object based on the template
+		await this.createObject('temperature', null);
+		await this.createObject('setTemperature', null);
 	}
 
 	/**
@@ -122,6 +92,16 @@ class Examples extends utils.Adapter {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
 		}
+
+		const idArray = id.split('.');
+		const stateName = idArray.pop();
+
+		switch(stateName){
+			case 'setTemperature':
+				this.setStateTmpl('temperature', null, state.val, true, null);
+				break;
+		}
+
 	}
 
 	// /**
@@ -140,6 +120,83 @@ class Examples extends utils.Adapter {
 	// 		}
 	// 	}
 	// }
+
+	/**
+	 * @param {string} name	- Name of the object definition
+	 * @param {string|null} parent - Optional, set null if not used. Parent of id if it is a sub object of a device, channel or other. e.g. 'examples.0.test'
+	 * @returns {Promise<object>}
+	 */
+	async createObject(name, parent){
+		const id = parent !== null ? `${parent}.${name}` : name;
+
+		const obj = {};
+		obj.type = oDefs[name].type;
+		obj.common = oDefs[name].common;
+		obj.native = oDefs[name].native;
+
+
+		// Subscribe state if its an write true
+		oDefs[name].common.write && this.subscribeStates(id);
+
+		return await this.setObjectAsync(id, obj);
+	}
+
+	/**
+	 *
+	 * @param {string} name - The name of the state
+	 * @param {string|null} parent - Optional, set null if not used. Parent of id if it is a sub object of a device, channel or other. e.g. 'examples.0.test'
+	 * @param {string|number|object|array} val
+	 * @param {boolean|null} ack - Optional, set to null if not used.
+	 * @param {number|null} expire - Optional, time in seconds before state expires and is set to null. Set null if not used.
+	 * @returns {Promise<object>}
+	 */
+	async setStateTmpl(name,parent, val, ack, expire){
+		const id = parent !== null ? `${parent}.${name}` : name;
+
+		const stateValue = {};
+
+		if(ack !== null) stateValue.ack = ack;
+		if(expire !== null) stateValue.expire = expire;
+
+		if(oDefs[name].value){
+			stateValue.val = await this.convertValue(oDefs[name].value, val);
+		}else{
+			stateValue.val = val;
+		}
+
+		return await this.setStateAsync(id, stateValue);
+	}
+
+	/**
+	 * Convert value delivered by device or API using the object template.
+	 * @param {object} cmd - The converter instructions
+	 * @param {string|number} value - The delivered value
+	 * @returns {Promise<any>}
+	 */
+	async convertValue(cmd, value){
+		const keys = Object.keys(cmd);
+		for(const k in keys){
+
+			switch(keys[k]) {
+				case 'multiplier':
+					const multiplier = cmd[keys[k]];
+					return value * multiplier;
+				case 'divider':
+					const divider = cmd[keys[k]];
+					return value / divider;
+				case 'number':
+					if (typeof value === number){
+						return cmd[keys[k]][value];
+					}else{
+						const numbers = cmd[keys[k]][value];
+						for(let i in numbers){
+							//if()
+						}
+					}
+			}
+
+		}
+	}
 
 }
 
