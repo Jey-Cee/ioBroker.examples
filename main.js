@@ -10,7 +10,9 @@ const utils = require('@iobroker/adapter-core');
 
 //Load object definitions
 const oDefs = require('./lib/object_definition.json');
+const ah = require('iobroker-adapter-helpers').roles;
 
+console.log(ah);
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
@@ -27,7 +29,7 @@ class Examples extends utils.Adapter {
 		this.on('ready', this.onReady.bind(this));
 		this.on('objectChange', this.onObjectChange.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
-		// this.on('message', this.onMessage.bind(this));
+		this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 	}
 
@@ -88,19 +90,22 @@ class Examples extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+
+			const idArray = id.split('.');
+			const stateName = idArray.pop();
+
+			switch(stateName){
+				case 'setTemperature':
+					this.setStateTmpl('temperature', null, state.val, true, null);
+					break;
+			}
+
 		} else {
 			// The state was deleted
 			this.log.info(`state ${id} deleted`);
 		}
 
-		const idArray = id.split('.');
-		const stateName = idArray.pop();
 
-		switch(stateName){
-			case 'setTemperature':
-				this.setStateTmpl('temperature', null, state.val, true, null);
-				break;
-		}
 
 	}
 
@@ -109,7 +114,7 @@ class Examples extends utils.Adapter {
 	//  * Using this method requires "common.message" property to be set to true in io-package.json
 	//  * @param {ioBroker.Message} obj
 	//  */
-	// onMessage(obj) {
+	 onMessage(obj) {
 	// 	if (typeof obj === 'object' && obj.message) {
 	// 		if (obj.command === 'send') {
 	// 			// e.g. send email or pushover or whatever
@@ -118,7 +123,7 @@ class Examples extends utils.Adapter {
 	// 			// Send response in callback if required
 	// 			if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
 	// 		}
-	// 	}
+		}
 	// }
 
 	/**
@@ -158,8 +163,8 @@ class Examples extends utils.Adapter {
 		if(ack !== null) stateValue.ack = ack;
 		if(expire !== null) stateValue.expire = expire;
 
-		if(oDefs[name].value){
-			stateValue.val = await this.convertValue(oDefs[name].value, val);
+		if(oDefs[name].condition){
+			stateValue.val = await this.convertValue(oDefs[name].condition, val);
 		}else{
 			stateValue.val = val;
 		}
@@ -178,21 +183,24 @@ class Examples extends utils.Adapter {
 		for(const k in keys){
 
 			switch(keys[k]) {
-				case 'multiplier':
+				case 'multiplier': {
 					const multiplier = cmd[keys[k]];
 					return value * multiplier;
-				case 'divider':
+				}
+				case 'divider': {
 					const divider = cmd[keys[k]];
 					return value / divider;
-				case 'number':
-					if (typeof value === number){
+				}
+				case 'number': {
+					if (typeof value === 'number') {
 						return cmd[keys[k]][value];
-					}else{
+					} else {
 						const numbers = cmd[keys[k]][value];
-						for(let i in numbers){
+						for (let i in numbers) {
 							//if()
 						}
 					}
+				}
 			}
 
 		}

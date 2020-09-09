@@ -24,10 +24,11 @@
     "url": "https://github.com/Jey-Cee/ioBroker.examples"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.2.1"
+    "@iobroker/adapter-core": "^2.3.0",
+    "iobroker-adapter-helpers": "^0.0.2"
   },
   "devDependencies": {
-    "@iobroker/testing": "^2.1.0",
+    "@iobroker/testing": "^2.2.0",
     "@types/chai": "^4.2.11",
     "@types/chai-as-promised": "^7.1.2",
     "@types/gulp": "^4.0.6",

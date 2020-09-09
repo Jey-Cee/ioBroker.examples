@@ -12,9 +12,12 @@
     "native": {
       "test": true
     },
-    "value": {
-      "divider": 10
-    }
+    "condition": [
+      { "io_value": false,
+        "operator":  "multiply",
+        "value": 10
+      }
+    ]
   },
   "setTemperature": {
     "type": "state",
@@ -39,9 +42,16 @@
     },
     "native": {
     },
-    "value": {
-      "number": {"0": false, "1":  true}
-    }
+    "condition": [
+      { "io_value": false,
+        "operator":  "equal",
+        "value": 0
+      },
+      { "io_value": true,
+        "operator":  "equal",
+        "value": 1
+      }
+    ]
   },
   "on_out": {
     "type": "state",
@@ -49,6 +59,23 @@
       "name": "Demo Output if you change ON",
       "type": "number",
       "role": "value",
+      "read": true,
+      "write": false
+    },
+    "native": {}
+  },
+
+  "color_picker": {
+    "type": "state",
+    "common": {
+      "name": "Example to have a dropdown of RGB hex colors",
+      "type": "string",
+      "role": "level.color.rgb",
+      "states": {
+        "#fa0202": "Red",
+        "#fa0202": "Green",
+        "#0207fa": "Blue"
+      },
       "read": true,
       "write": false
     },

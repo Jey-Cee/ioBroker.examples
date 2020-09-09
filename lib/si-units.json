@@ -1,0 +1,23 @@
+{
+  "si_units": {
+    "time": {"formula_symbol":  "t", "dimension_symbol":  "T", "unit":  "Second", "unit_symbol":  "s"},
+    "length": {"formula_symbol":  "l", "dimension_symbol":  "L", "unit":  "Meter", "unit_symbol":  "m"},
+    "mass": {"formula_symbol":  "m", "dimension_symbol":  "M", "unit":  "Kilogram", "unit_symbol":  "kg"},
+    "current": {"formula_symbol":  "I", "dimension_symbol":  "I", "unit":  "Ampere", "unit_symbol":  "A"},
+    "thermodynamic_temperature": {"formula_symbol":  "T", "dimension_symbol":  "Θ", "unit":  "Kelvin", "unit_symbol":  "K"},
+    "amount_of_substance": {"formula_symbol":  "n", "dimension_symbol":  "N", "unit":  "Mol", "unit_symbol":  "mol"},
+    "luminous_intensity": {"formula_symbol":  "lv", "dimension_symbol":  "J", "unit":  "Candela", "unit_symbol":  "cd"}
+  },
+  "physical_units": {
+    "force": {"formula_symbol":  ["F", "K"], "unit":  "Newton", "unit_symbol":  "N"},
+    "pressure": {"formula_symbol":  "p", "unit":  "Pascal", "unit_symbol":  "Pa"},
+    "energy": {"formula_symbol":  "E", "unit":  "Joule", "unit_symbol":  "J"},
+    "work": {"formula_symbol":  "W", "unit":  "Joule", "unit_symbol":  "J"},
+    "heat": {"formula_symbol":  "Q", "unit":  "Joule", "unit_symbol":  "J"},
+    "power": {"formula_symbol":  "P", "unit":  "Watt", "unit_symbol":  "W"},
+    "electric_charge": {"formula_symbol":  ["Q", "q"], "unit":  "Coulomb", "unit_symbol":  "C"},
+    "electrical_voltage": {"formula_symbol":  "U", "unit":  "Volt", "unit_symbol":  "V"},
+    "electrical_capacity": {"formula_symbol":  "C", "unit":  "Farad", "unit_symbol":  "F"},
+    
+  }
+}

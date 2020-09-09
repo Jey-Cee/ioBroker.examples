@@ -69,7 +69,7 @@
 						break;
 					case 'select':
 						if (write === 'true') {
-							tableRow += `<td><div class="input-field col s12"><select class="table-select"> <option value="" disabled selected>Choose your option</option></select></div></td>`;
+							tableRow += `<td><div class="input-field col s12"><select class="table-select"> <option value="" disabled selected>Choose your option</option><option value="option 1">Option 1</option></select></div></td>`;
 						} else {
 							tableRow += `<td>${data[d]}</td>`
 						}
@@ -158,8 +158,8 @@
             $('#fill-dynamic-table').on('click', () => {
             	let data = [1, 'Text', 'privat', '', true];
             	let data2 = [2, 'Anderer Text', 'geheim', '', false];
-                fillTable('#dynamic-table', data, false);
-                fillTable('#dynamic-table', data2, true);
+                fillTable('#dynamic-table', data, false); //row without delete function in config while flag is false
+                fillTable('#dynamic-table', data2, true); //row with delete function in config while flag is true
             })
 
             //Fill select on Elements Tab with options
