@@ -69,7 +69,11 @@
 						break;
 					case 'select':
 						if (write === 'true') {
-							tableRow += `<td><div class="input-field col s12"><select class="table-select"> <option value="" disabled selected>Choose your option</option><option value="option 1">Option 1</option></select></div></td>`;
+							tableRow += `<td><div class="input-field col s12"><select class="table-select"> <option value="" disabled selected>Choose your option</option>`;
+                        				for (const dataKey in data) {
+                                				tableRow += `<option value=${data[dataKey]}>${data[dataKey]}</option>`;
+                            					}
+                            				tableRow += `</select></div></td>`;
 						} else {
 							tableRow += `<td>${data[d]}</td>`
 						}
